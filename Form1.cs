@@ -74,7 +74,11 @@ namespace TimerAndAlerm
             {
                 if (beijintime.Minute == 54 && beijintime.Second == 0)
                 {
-                    FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime.ToString("HH:mm:ss")} 到了，准备发正念");
+                    Task.Run(() =>
+                    {
+                        PlayNotification("Asset\\daojishi.mp3");
+                    });
+                    FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime.ToString("HH:mm:ss")} 到了，准备发正念");                    
                     fullScreenMessage.ShowDialog();
                 }
                 if (beijintime.Minute == 55 && beijintime.Second == 0)
@@ -148,10 +152,13 @@ namespace TimerAndAlerm
         private void btnStart_Click(object sender, EventArgs e)
         {
             stopwatch.Start();
-            miaobiaotimer = new Timer();
-            miaobiaotimer.Interval = 1;
-            miaobiaotimer.Tick += UpdateStopwatchDisplay;
-            miaobiaotimer.Start();
+            if (miaobiaotimer == null)
+            {
+                miaobiaotimer = new Timer();
+                miaobiaotimer.Interval = 1;
+                miaobiaotimer.Tick += UpdateStopwatchDisplay;
+                miaobiaotimer.Start();
+            }
         }
 
         private void UpdateStopwatchDisplay(object sender, EventArgs e)
@@ -234,6 +241,10 @@ namespace TimerAndAlerm
                 {
                     inputData = inputDialog.InputText;
                 }
+                else
+                {
+                    return;
+                }
             }
 
             //if (mins <= 0) return;
@@ -249,10 +260,12 @@ namespace TimerAndAlerm
                 progressBar1.Value = (progressBar1.Value - 1) < 0 ? 0 : (progressBar1.Value - 1);
                 if (progressBar1.Value <= 0)
                 {
-                    // 停止定时器
-                    daojishitimer.Stop();
-                    // 销毁定时器
-                    daojishitimer.Dispose();
+                    if (daojishitimer != null)
+                    { // 停止定时器
+                        daojishitimer.Stop();
+                        // 销毁定时器
+                        daojishitimer.Dispose();
+                    }
                     Task.Run(() =>
                     {
                         PlayNotification("Asset\\daojishi.mp3");
@@ -286,7 +299,7 @@ namespace TimerAndAlerm
                 string[] selectedPath = openFileDialog.FileNames;
                 foreach (var item in selectedPath)
                 {
-                    if (Path.GetExtension(item) == ".mp3" || Path.GetExtension(item) == ".wma")
+                    if (Path.GetExtension(item).ToLower() == ".mp3" || Path.GetExtension(item).ToLower() == ".wma" || Path.GetExtension(item).ToLower() == ".wav")
                     {
                         if (!audioList.Any(s => s[0] == item))
                         {
@@ -392,11 +405,14 @@ namespace TimerAndAlerm
 
         private void button7_Click(object sender, EventArgs e)
         {
-            daojishitimer.Stop();
-            daojishitimer.Dispose();
-            daojishitimer = null;
-            progressBar1.Value = 0;
-            txbMins.Text = "";
+            if (daojishitimer != null)
+            {
+                daojishitimer.Stop();
+                daojishitimer.Dispose();
+                daojishitimer = null;
+                progressBar1.Value = 0;
+                txbMins.Text = "";
+            }
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -424,6 +440,9 @@ namespace TimerAndAlerm
                 wavePlayer.Dispose();
             }
             audioList.Clear();
+            txbAudios.Text = "";
+            button6.Text = "播放";
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
