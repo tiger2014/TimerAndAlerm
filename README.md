@@ -7,11 +7,12 @@
 
 ## 本软件关闭后常驻系统托盘，右键系统托盘图标，可以选 退出/显示原窗口
 
-![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/d52bf4f6-261e-49e0-a3a4-ff989df9f233)
-
-![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/592e13bd-c955-4c9e-b305-4df11e1833df)
+![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/d4dec7d9-ec17-4463-b305-87e6cd9e6021)
 
 ![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/d67356b6-d76c-4679-9922-6629558aed5d)
+
+![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/0fa8fd83-5793-4d56-97c1-6bdc9c8868a1)
+
 
 ![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/d05aeb4c-8075-49d4-bbbc-6feb15bd4d5c)
 
