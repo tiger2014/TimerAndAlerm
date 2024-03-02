@@ -228,7 +228,7 @@ namespace TimerAndAlerm
             {
             }
             string inputData = string.Empty;
-            using (InputDialog inputDialog = new InputDialog("请输入倒计时是由"))
+            using (InputDialog inputDialog = new InputDialog("请输入倒计时事由"))
             {
                 if (inputDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -424,6 +424,11 @@ namespace TimerAndAlerm
                 wavePlayer.Dispose();
             }
             audioList.Clear();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

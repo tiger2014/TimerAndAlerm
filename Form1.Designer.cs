@@ -153,7 +153,7 @@
             // 
             // button5
             // 
-            button5.Location = new Point(25, 175);
+            button5.Location = new Point(22, 185);
             button5.Name = "button5";
             button5.Size = new Size(65, 29);
             button5.TabIndex = 11;
@@ -164,7 +164,7 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(25, 210);
+            checkBox1.Location = new Point(25, 220);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(75, 19);
             checkBox1.TabIndex = 12;
@@ -173,16 +173,16 @@
             // 
             // txbAudios
             // 
-            txbAudios.Location = new Point(25, 235);
+            txbAudios.Location = new Point(25, 245);
             txbAudios.Multiline = true;
             txbAudios.Name = "txbAudios";
             txbAudios.ScrollBars = ScrollBars.Vertical;
-            txbAudios.Size = new Size(254, 124);
+            txbAudios.Size = new Size(258, 138);
             txbAudios.TabIndex = 13;
             // 
             // button6
             // 
-            button6.Location = new Point(178, 175);
+            button6.Location = new Point(175, 185);
             button6.Name = "button6";
             button6.Size = new Size(50, 41);
             button6.TabIndex = 14;
@@ -211,7 +211,7 @@
             // 
             // button8
             // 
-            button8.Location = new Point(234, 175);
+            button8.Location = new Point(231, 185);
             button8.Name = "button8";
             button8.Size = new Size(46, 41);
             button8.TabIndex = 17;
@@ -221,7 +221,7 @@
             // 
             // button9
             // 
-            button9.Location = new Point(95, 175);
+            button9.Location = new Point(93, 185);
             button9.Name = "button9";
             button9.Size = new Size(64, 29);
             button9.TabIndex = 18;
@@ -233,7 +233,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(295, 371);
+            ClientSize = new Size(295, 395);
             Controls.Add(button9);
             Controls.Add(button8);
             Controls.Add(label3);
@@ -256,6 +256,7 @@
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "Form1";
             Text = "Form1";
+            Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
         }
