@@ -8,6 +8,8 @@
 ### 3. 倒计时，比如洗衣服后设倒计时60分钟，到点全屏弹窗和响铃，免得忘了衣服在洗衣机；煮鸡蛋、煮面也可以设倒计时
 ![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/d67356b6-d76c-4679-9922-6629558aed5d)
 ![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/0fa8fd83-5793-4d56-97c1-6bdc9c8868a1)
+![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/6466032c-3715-4d59-b3ae-05b2ba61a7d6)
+
 
 ### 4. 可以循环播放自己任选的音频（本人没找到这样的播放器），这个特别时候无限循环播放《九评共产党》、《解体党文化》等等
 ![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/d05aeb4c-8075-49d4-bbbc-6feb15bd4d5c)
