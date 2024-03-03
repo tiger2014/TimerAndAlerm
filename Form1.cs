@@ -70,6 +70,7 @@ namespace TimerAndAlerm
         private void AlarmTimer_Tick(object sender, EventArgs e)
         {
             var beijintime = GetBeiJinTime();
+            label5.Text= beijintime.ToString("HH:mm:ss");
             if (beijintime.Hour == 0 || beijintime.Hour == 5 || beijintime.Hour == 11 || beijintime.Hour == 17 || beijintime.Hour == 23)
             {
                 if (beijintime.Minute == 54 && beijintime.Second == 0)

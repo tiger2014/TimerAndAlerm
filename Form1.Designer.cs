@@ -47,11 +47,13 @@
             label3 = new Label();
             button8 = new Button();
             button9 = new Button();
+            label4 = new Label();
+            label5 = new Label();
             SuspendLayout();
             // 
             // buttonStart
             // 
-            buttonStart.Location = new Point(12, 12);
+            buttonStart.Location = new Point(12, 63);
             buttonStart.Name = "buttonStart";
             buttonStart.Size = new Size(88, 35);
             buttonStart.TabIndex = 0;
@@ -61,7 +63,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(106, 12);
+            button1.Location = new Point(106, 63);
             button1.Name = "button1";
             button1.Size = new Size(82, 35);
             button1.TabIndex = 1;
@@ -72,14 +74,14 @@
             // lblStopwatch
             // 
             lblStopwatch.AutoSize = true;
-            lblStopwatch.Location = new Point(69, 64);
+            lblStopwatch.Location = new Point(69, 115);
             lblStopwatch.Name = "lblStopwatch";
             lblStopwatch.Size = new Size(0, 15);
             lblStopwatch.TabIndex = 2;
             // 
             // btnReset
             // 
-            btnReset.Location = new Point(204, 12);
+            btnReset.Location = new Point(204, 63);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(75, 35);
             btnReset.TabIndex = 3;
@@ -90,7 +92,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(25, 64);
+            label1.Location = new Point(25, 115);
             label1.Name = "label1";
             label1.Size = new Size(37, 15);
             label1.TabIndex = 4;
@@ -99,7 +101,7 @@
             // button2
             // 
             button2.Font = new Font("Segoe UI", 9F);
-            button2.Location = new Point(72, 99);
+            button2.Location = new Point(72, 150);
             button2.Name = "button2";
             button2.Size = new Size(21, 23);
             button2.TabIndex = 5;
@@ -109,7 +111,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(136, 99);
+            button3.Location = new Point(136, 150);
             button3.Name = "button3";
             button3.Size = new Size(23, 23);
             button3.TabIndex = 6;
@@ -119,7 +121,7 @@
             // 
             // txbMins
             // 
-            txbMins.Location = new Point(99, 99);
+            txbMins.Location = new Point(99, 150);
             txbMins.Name = "txbMins";
             txbMins.Size = new Size(32, 23);
             txbMins.TabIndex = 7;
@@ -128,7 +130,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(22, 103);
+            label2.Location = new Point(22, 154);
             label2.Name = "label2";
             label2.Size = new Size(53, 15);
             label2.TabIndex = 8;
@@ -136,7 +138,7 @@
             // 
             // button4
             // 
-            button4.Location = new Point(163, 99);
+            button4.Location = new Point(163, 150);
             button4.Name = "button4";
             button4.Size = new Size(55, 23);
             button4.TabIndex = 9;
@@ -146,14 +148,14 @@
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(85, 144);
+            progressBar1.Location = new Point(85, 195);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(194, 15);
             progressBar1.TabIndex = 10;
             // 
             // button5
             // 
-            button5.Location = new Point(22, 185);
+            button5.Location = new Point(22, 236);
             button5.Name = "button5";
             button5.Size = new Size(65, 29);
             button5.TabIndex = 11;
@@ -164,7 +166,7 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(25, 220);
+            checkBox1.Location = new Point(25, 271);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(75, 19);
             checkBox1.TabIndex = 12;
@@ -173,7 +175,7 @@
             // 
             // txbAudios
             // 
-            txbAudios.Location = new Point(25, 245);
+            txbAudios.Location = new Point(25, 296);
             txbAudios.Multiline = true;
             txbAudios.Name = "txbAudios";
             txbAudios.ScrollBars = ScrollBars.Vertical;
@@ -182,7 +184,7 @@
             // 
             // button6
             // 
-            button6.Location = new Point(175, 185);
+            button6.Location = new Point(180, 236);
             button6.Name = "button6";
             button6.Size = new Size(50, 41);
             button6.TabIndex = 14;
@@ -192,7 +194,7 @@
             // 
             // button7
             // 
-            button7.Location = new Point(234, 98);
+            button7.Location = new Point(234, 149);
             button7.Name = "button7";
             button7.Size = new Size(45, 23);
             button7.TabIndex = 15;
@@ -203,7 +205,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(25, 144);
+            label3.Location = new Point(25, 195);
             label3.Name = "label3";
             label3.Size = new Size(54, 15);
             label3.TabIndex = 16;
@@ -211,7 +213,7 @@
             // 
             // button8
             // 
-            button8.Location = new Point(231, 185);
+            button8.Location = new Point(237, 236);
             button8.Name = "button8";
             button8.Size = new Size(46, 41);
             button8.TabIndex = 17;
@@ -221,7 +223,7 @@
             // 
             // button9
             // 
-            button9.Location = new Point(93, 185);
+            button9.Location = new Point(102, 236);
             button9.Name = "button9";
             button9.Size = new Size(64, 29);
             button9.TabIndex = 18;
@@ -229,11 +231,31 @@
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(35, 21);
+            label4.Name = "label4";
+            label4.Size = new Size(63, 15);
+            label4.TabIndex = 19;
+            label4.Text = "北京时间：";
+            // 
+            // label5
+            // 
+            label5.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.Location = new Point(110, 7);
+            label5.Name = "label5";
+            label5.Size = new Size(147, 39);
+            label5.TabIndex = 16;
+            label5.Text = "00：00：00";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(295, 395);
+            ClientSize = new Size(295, 444);
+            Controls.Add(label5);
+            Controls.Add(label4);
             Controls.Add(button9);
             Controls.Add(button8);
             Controls.Add(label3);
@@ -282,5 +304,7 @@
         private Label label3;
         private Button button8;
         private Button button9;
+        private Label label4;
+        private Label label5;
     }
 }
