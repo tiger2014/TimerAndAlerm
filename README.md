@@ -1,5 +1,7 @@
 ## 本软件特别适合在电脑前工作的人
 
+![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/7552ef28-a3d8-4d8a-a741-bbb1c53af7b3)
+
 ### 1. 秒表
 ![image](https://github.com/tiger2014/TimerAndAlerm/assets/6703612/d4dec7d9-ec17-4463-b305-87e6cd9e6021)
 
