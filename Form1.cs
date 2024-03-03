@@ -79,7 +79,7 @@ namespace TimerAndAlerm
                     {
                         PlayNotification("Asset\\daojishi.mp3");
                     });
-                    FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime.ToString("HH:mm:ss")} 到了，准备发正念");                    
+                    FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime.ToString("HH:mm:ss")} 到了，准备发正念。当前本地时间 {DateTime.Now.ToString("HH:mm:ss")}");                    
                     fullScreenMessage.ShowDialog();
                 }
                 if (beijintime.Minute == 55 && beijintime.Second == 0)
