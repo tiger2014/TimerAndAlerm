@@ -328,13 +328,7 @@ namespace TimerAndAlerm
         public void PlayNotificationAudio(string filepath)
         {
             try
-            {
-                if (button10.Text == "敲钟")
-                {
-                    button10.Text = "聆听";
-                    button10.Enabled = false;
-                }
-                
+            {                
                 IWavePlayer player = new WaveOut(); // 你也可以选择其他 IWavePlayer 实现
                 var audioFileReader1 = new AudioFileReader(filepath);
                 player.Volume = 1.0f;           // 相对于原始音量的比例
@@ -346,8 +340,6 @@ namespace TimerAndAlerm
                         button10.Text = "敲钟";
                         button10.Enabled = true;
                     }
-                    player.Stop();
-                    player.Dispose();
                 };
                 player.Play();
             }
@@ -464,6 +456,11 @@ namespace TimerAndAlerm
 
         private void button10_Click(object sender, EventArgs e)
         {
+            if (button10.Text == "敲钟")
+            {
+                button10.Text = "聆听";
+                button10.Enabled = false;
+            }
             PlayNotificationAudio("Asset\\fzn15.mp3");
         }
     }
