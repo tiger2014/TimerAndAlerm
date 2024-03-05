@@ -384,7 +384,7 @@ namespace TimerAndAlerm
                     }
                     else
                     {
-                        if (audioList.Count <= currentTrackIndex + 1) return;
+                        if (audioList.Count <= currentTrackIndex + 1) { button6.Text="播放"; return; };
                         currentTrackIndex++;
                         PlayCurrentTrack();
                     }
