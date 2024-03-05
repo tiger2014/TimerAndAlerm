@@ -49,6 +49,7 @@
             button9 = new Button();
             label4 = new Label();
             label5 = new Label();
+            button10 = new Button();
             SuspendLayout();
             // 
             // buttonStart
@@ -234,7 +235,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(35, 21);
+            label4.Location = new Point(14, 22);
             label4.Name = "label4";
             label4.Size = new Size(63, 15);
             label4.TabIndex = 19;
@@ -243,17 +244,28 @@
             // label5
             // 
             label5.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(110, 7);
+            label5.Location = new Point(76, 7);
             label5.Name = "label5";
             label5.Size = new Size(147, 39);
             label5.TabIndex = 16;
             label5.Text = "00：00：00";
+            // 
+            // button10
+            // 
+            button10.Location = new Point(222, 14);
+            button10.Name = "button10";
+            button10.Size = new Size(57, 24);
+            button10.TabIndex = 20;
+            button10.Text = "敲钟";
+            button10.UseVisualStyleBackColor = true;
+            button10.Click += button10_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(295, 444);
+            Controls.Add(button10);
             Controls.Add(label5);
             Controls.Add(label4);
             Controls.Add(button9);
@@ -278,7 +290,6 @@
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "Form1";
             Text = "Form1";
-            Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -306,5 +317,6 @@
         private Button button9;
         private Label label4;
         private Label label5;
+        private Button button10;
     }
 }

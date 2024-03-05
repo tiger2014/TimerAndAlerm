@@ -47,6 +47,8 @@ namespace TimerAndAlerm
             
             // 设置 TextBox 的新字体
             lblMessage.Font = newFont;
+
+            this.TopMost = true;
         }
     }
 }

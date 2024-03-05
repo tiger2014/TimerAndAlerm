@@ -70,16 +70,16 @@ namespace TimerAndAlerm
         private void AlarmTimer_Tick(object sender, EventArgs e)
         {
             var beijintime = GetBeiJinTime();
-            label5.Text= beijintime.ToString("HH:mm:ss");
+            label5.Text = beijintime.ToString("HH:mm:ss");
             if (beijintime.Hour == 5 || beijintime.Hour == 11 || beijintime.Hour == 17 || beijintime.Hour == 23)
             {
                 if (beijintime.Minute == 54 && beijintime.Second == 0)
                 {
                     Task.Run(() =>
                     {
-                        PlayNotification("Asset\\daojishi.mp3");
+                        PlayNotificationAudio("Asset\\daojishi.mp3");
                     });
-                    FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime.ToString("HH:mm:ss")} 到了，准备发正念。当前本地时间 {DateTime.Now.ToString("HH:mm:ss")}");                    
+                    FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime.ToString("HH:mm:ss")} 到了，准备发正念。当前本地时间 {DateTime.Now.ToString("HH:mm:ss")}");
                     fullScreenMessage.ShowDialog();
                 }
                 if (beijintime.Minute == 55 && beijintime.Second == 0)
@@ -87,7 +87,7 @@ namespace TimerAndAlerm
                     // 播放钟声
                     Task.Run(() =>
                     {
-                        PlayNotification("Asset\\fzn15.mp3");
+                        PlayNotificationAudio("Asset\\fzn15.mp3");
                     });
                 }
             }
@@ -269,7 +269,7 @@ namespace TimerAndAlerm
                     }
                     Task.Run(() =>
                     {
-                        PlayNotification("Asset\\daojishi.mp3");
+                        PlayNotificationAudio("Asset\\daojishi.mp3");
                     });
                     //MessageBox.Show($"{mins} 分钟到了！", "倒计时", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"{mins} 分钟到了！请 ‘{inputData}’");
@@ -325,14 +325,30 @@ namespace TimerAndAlerm
             PlayCurrentTrack();
         }
 
-        public void PlayNotification(string filepath)
+        public void PlayNotificationAudio(string filepath)
         {
             try
             {
+                if (button10.Text == "敲钟")
+                {
+                    button10.Text = "聆听";
+                    button10.Enabled = false;
+                }
+                
                 IWavePlayer player = new WaveOut(); // 你也可以选择其他 IWavePlayer 实现
                 var audioFileReader1 = new AudioFileReader(filepath);
                 player.Volume = 1.0f;           // 相对于原始音量的比例
                 player.Init(audioFileReader1);
+                player.PlaybackStopped += (sender, e) =>
+                {
+                    if (button10.Text == "聆听")
+                    {
+                        button10.Text = "敲钟";
+                        button10.Enabled = true;
+                    }
+                    player.Stop();
+                    player.Dispose();
+                };
                 player.Play();
             }
             catch (Exception ex)
@@ -384,7 +400,7 @@ namespace TimerAndAlerm
                     }
                     else
                     {
-                        if (audioList.Count <= currentTrackIndex + 1) { button6.Text="播放"; return; };
+                        if (audioList.Count <= currentTrackIndex + 1) { button6.Text = "播放"; return; };
                         currentTrackIndex++;
                         PlayCurrentTrack();
                     }
@@ -446,9 +462,9 @@ namespace TimerAndAlerm
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void button10_Click(object sender, EventArgs e)
         {
-
+            PlayNotificationAudio("Asset\\fzn15.mp3");
         }
     }
 }
