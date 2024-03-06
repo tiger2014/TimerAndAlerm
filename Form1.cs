@@ -17,6 +17,8 @@ namespace TimerAndAlerm
         private List<string[]> audioList = new List<string[]>();
         private IWavePlayer wavePlayer;
         private AudioFileReader? audioFileReader;
+        private IWavePlayer notifyPlayer;
+        private AudioFileReader? bellAudioFileReader;
         private int currentTrackIndex;
         private long pausedPosition;
 
@@ -267,10 +269,10 @@ namespace TimerAndAlerm
                         // 销毁定时器
                         daojishitimer.Dispose();
                     }
-                    Task.Run(() =>
-                    {
+                    //Task.Run(() =>
+                    //{
                         PlayNotificationAudio("Asset\\daojishi.mp3");
-                    });
+                    //});
                     //MessageBox.Show($"{mins} 分钟到了！", "倒计时", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"{mins} 分钟到了！请 ‘{inputData}’");
                     fullScreenMessage.ShowDialog();
@@ -328,12 +330,37 @@ namespace TimerAndAlerm
         public void PlayNotificationAudio(string filepath)
         {
             try
-            {                
-                IWavePlayer player = new WaveOut(); // 你也可以选择其他 IWavePlayer 实现
-                var audioFileReader1 = new AudioFileReader(filepath);
-                player.Volume = 1.0f;           // 相对于原始音量的比例
-                player.Init(audioFileReader1);
-                player.PlaybackStopped += (sender, e) =>
+            {
+                if (notifyPlayer != null)
+                {
+                    notifyPlayer.Stop();
+                    notifyPlayer.Dispose();
+                }
+                notifyPlayer = new WaveOut(); // 你也可以选择其他 IWavePlayer 实现
+                bellAudioFileReader = new AudioFileReader(filepath);
+                notifyPlayer.Volume = 1.0f;           // 相对于原始音量的比例
+                notifyPlayer.Init(bellAudioFileReader);
+                //notifyPlayer.PlaybackStopped += (sender, e) =>
+                //{
+                //    notifyPlayer?.Dispose();
+                //};
+                notifyPlayer.Play();
+            }
+            catch (Exception ex)
+            {
+                //
+            }
+        }
+
+        public void RingTheBell(string filepath)
+        {
+            try
+            {
+                var bellPlayer = new WaveOut(); // 你也可以选择其他 IWavePlayer 实现
+                var bellAudioFileReader = new AudioFileReader(filepath);
+                bellPlayer.Volume = 1.0f;           // 相对于原始音量的比例
+                bellPlayer.Init(bellAudioFileReader);
+                bellPlayer.PlaybackStopped += (sender, e) =>
                 {
                     if (button10.Text == "聆听")
                     {
@@ -341,7 +368,7 @@ namespace TimerAndAlerm
                         button10.Enabled = true;
                     }
                 };
-                player.Play();
+                bellPlayer.Play();
             }
             catch (Exception ex)
             {
@@ -451,7 +478,6 @@ namespace TimerAndAlerm
             audioList.Clear();
             txbAudios.Text = "";
             button6.Text = "播放";
-
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -461,7 +487,7 @@ namespace TimerAndAlerm
                 button10.Text = "聆听";
                 button10.Enabled = false;
             }
-            PlayNotificationAudio("Asset\\fzn15.mp3");
+            RingTheBell("Asset\\fzn15.mp3");
         }
     }
 }
