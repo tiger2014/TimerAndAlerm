@@ -264,7 +264,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(295, 444);
+            ClientSize = new Size(295, 446);
             Controls.Add(button10);
             Controls.Add(label5);
             Controls.Add(label4);
@@ -318,5 +318,7 @@
         private Label label4;
         private Label label5;
         private Button button10;
+        private Button btnLogOrders;
+        private Button btnStopLog;
     }
 }

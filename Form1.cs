@@ -87,10 +87,11 @@ namespace TimerAndAlerm
                 if (beijintime.Minute == 55 && beijintime.Second == 0)
                 {
                     // 播放钟声
-                    Task.Run(() =>
-                    {
-                        PlayNotificationAudio("Asset\\fzn15.mp3");
-                    });
+                    //Task.Run(() =>
+                    //{
+                    //    PlayNotificationAudio("Asset\\fzn15.mp3");
+                    //});
+                    button10.PerformClick();
                 }
             }
         }
@@ -271,7 +272,7 @@ namespace TimerAndAlerm
                     }
                     //Task.Run(() =>
                     //{
-                        PlayNotificationAudio("Asset\\daojishi.mp3");
+                    PlayNotificationAudio("Asset\\daojishi.mp3");
                     //});
                     //MessageBox.Show($"{mins} 分钟到了！", "倒计时", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"{mins} 分钟到了！请 ‘{inputData}’");
@@ -488,6 +489,11 @@ namespace TimerAndAlerm
                 button10.Enabled = false;
             }
             RingTheBell("Asset\\fzn15.mp3");
+        }
+
+        private void btnLogOrders_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
