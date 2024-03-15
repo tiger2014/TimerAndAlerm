@@ -74,24 +74,29 @@ namespace TimerAndAlerm
             var beijintime = GetBeiJinTime();
             label5.Text = beijintime.ToString("HH:mm:ss");
             if (beijintime.Hour == 5 || beijintime.Hour == 11 || beijintime.Hour == 17 || beijintime.Hour == 23)
+            //if (true)
             {
                 if (beijintime.Minute == 54 && beijintime.Second == 0)
+                //if (beijintime.Second == 0)
                 {
-                    Task.Run(() =>
-                    {
+                    Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick0");
+
+                    
                         PlayNotificationAudio("Asset\\daojishi.mp3");
-                    });
+                  
                     FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime.ToString("HH:mm:ss")} 到了，准备发正念。当前本地时间 {DateTime.Now.ToString("HH:mm:ss")}");
                     fullScreenMessage.ShowDialog();
+                    Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick1");
+
                 }
                 if (beijintime.Minute == 55 && beijintime.Second == 0)
+                //if (beijintime.Second == 30)
                 {
-                    // 播放钟声
-                    //Task.Run(() =>
-                    //{
-                    //    PlayNotificationAudio("Asset\\fzn15.mp3");
-                    //});
-                    button10.PerformClick();
+                    Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick2");
+
+                    RingTheBell("Asset\\fzn15.mp3");
+                    Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick3");
+
                 }
             }
         }
@@ -114,6 +119,7 @@ namespace TimerAndAlerm
         {
             Show();
             WindowState = FormWindowState.Normal;
+            this.TopMost=true;
         }
 
         private void ExitMenuItem_Click(object sender, EventArgs e)
@@ -355,11 +361,22 @@ namespace TimerAndAlerm
 
         public void RingTheBell(string filepath)
         {
+            if (button10.Text == "聆听")
+            {
+                return;
+            }
+            else
+            {
+                button10.Text = "聆听";
+                button10.Enabled = false;
+
+            }
+            Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: RingTheBell0");
             try
             {
                 var bellPlayer = new WaveOut(); // 你也可以选择其他 IWavePlayer 实现
                 var bellAudioFileReader = new AudioFileReader(filepath);
-                bellPlayer.Volume = 1.0f;           // 相对于原始音量的比例
+                bellPlayer.Volume = 0.99f;           // 相对于原始音量的比例
                 bellPlayer.Init(bellAudioFileReader);
                 bellPlayer.PlaybackStopped += (sender, e) =>
                 {
@@ -370,10 +387,12 @@ namespace TimerAndAlerm
                     }
                 };
                 bellPlayer.Play();
+                Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: RingTheBell1");
+
             }
             catch (Exception ex)
             {
-                //
+                Debug.WriteLine($"RingTheBell: {ex.Message}, {ex.StackTrace}");
             }
         }
 

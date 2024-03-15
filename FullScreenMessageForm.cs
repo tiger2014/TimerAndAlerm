@@ -42,9 +42,9 @@ namespace TimerAndAlerm
             this.Controls.Add(closeButton);
 
             // 手动调整消息文本的位置和大小
-            lblMessage.Location = new Point(1982/2 - 120, 1084/2 - 50);
+            lblMessage.Location = new Point(1982 / 2 - 120, 1084 / 2 - 50);
             lblMessage.TextAlign = ContentAlignment.MiddleCenter;
-            
+
             // 设置 TextBox 的新字体
             lblMessage.Font = newFont;
 
