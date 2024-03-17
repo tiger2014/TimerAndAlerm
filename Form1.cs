@@ -179,6 +179,7 @@ namespace TimerAndAlerm
         private void btnStop_Click(object sender, EventArgs e)
         {
             stopwatch.Stop();
+            stopwatch.Stop();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -201,6 +202,7 @@ namespace TimerAndAlerm
                 miaobiaotimer.Dispose();
                 miaobiaotimer = null;
                 lblStopwatch.Text = @"00:00:00.000";
+                stopwatch.Reset();
             }
         }
 
