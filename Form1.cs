@@ -21,6 +21,7 @@ namespace TimerAndAlerm
         private AudioFileReader? bellAudioFileReader;
         private int currentTrackIndex;
         private long pausedPosition;
+        private string[] musicList;
 
         public Form1()
         {
@@ -30,6 +31,15 @@ namespace TimerAndAlerm
             InitializeAlarmTimer();
             this.FormClosing += Form1_FormClosing; // 确保连接 FormClosing 事件
             this.Text = "Assistant";
+            musicList = File.ReadAllLines("Asset\\musicList.txt");
+
+            for (int i = 0; i < musicList.Count(); i++)
+            {
+                string filename = Path.GetFileName(musicList[i]);
+                string[] audio = { musicList[i], filename };
+                audioList.Add(audio);
+                txbAudios.Text += audioList[i][1] + Environment.NewLine;
+            }
         }
 
         private void InitializeNotifyIcon()
@@ -81,13 +91,11 @@ namespace TimerAndAlerm
                 {
                     Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick0");
 
-                    
-                        PlayNotificationAudio("Asset\\daojishi.mp3");
-                  
+                    PlayNotificationAudio("Asset\\daojishi.mp3");
+
                     FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime.ToString("HH:mm:ss")} 到了，准备发正念。当前本地时间 {DateTime.Now.ToString("HH:mm:ss")}");
                     fullScreenMessage.ShowDialog();
                     Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick1");
-
                 }
                 if (beijintime.Minute == 55 && beijintime.Second == 0)
                 //if (beijintime.Second == 30)
@@ -96,7 +104,6 @@ namespace TimerAndAlerm
 
                     RingTheBell("Asset\\fzn15.mp3");
                     Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick3");
-
                 }
             }
         }
@@ -119,7 +126,7 @@ namespace TimerAndAlerm
         {
             Show();
             WindowState = FormWindowState.Normal;
-            this.TopMost=true;
+            this.TopMost = true;
         }
 
         private void ExitMenuItem_Click(object sender, EventArgs e)
@@ -152,6 +159,16 @@ namespace TimerAndAlerm
                 daojishitimer.Stop();
                 daojishitimer.Dispose();
                 daojishitimer = null;
+            }
+
+            string newContent = "";
+            for (int i = 0; i < audioList.Count; i++)
+            {
+                newContent += audioList[i][0] + Environment.NewLine;
+            }
+            if (!string.IsNullOrWhiteSpace(newContent))
+            {
+                File.WriteAllText("Asset\\musicList.txt", newContent);
             }
 
             System.Windows.Forms.Application.Exit(); // 退出应用程序
@@ -371,7 +388,6 @@ namespace TimerAndAlerm
             {
                 button10.Text = "聆听";
                 button10.Enabled = false;
-
             }
             Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: RingTheBell0");
             try
@@ -390,7 +406,6 @@ namespace TimerAndAlerm
                 };
                 bellPlayer.Play();
                 Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: RingTheBell1");
-
             }
             catch (Exception ex)
             {
@@ -514,7 +529,6 @@ namespace TimerAndAlerm
 
         private void btnLogOrders_Click(object sender, EventArgs e)
         {
-
         }
     }
 }
