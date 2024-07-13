@@ -521,10 +521,11 @@ namespace TimerAndAlerm
         {
             if (button10.Text == "敲钟")
             {
-                button10.Text = "聆听";
+                //button10.Text = "聆听";
+                RingTheBell("Asset\\fzn15.mp3");
                 button10.Enabled = false;
             }
-            RingTheBell("Asset\\fzn15.mp3");
+            
         }
 
         private void btnLogOrders_Click(object sender, EventArgs e)
