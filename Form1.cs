@@ -208,6 +208,17 @@ namespace TimerAndAlerm
         {
             e.Cancel = true;        // 取消默认关闭操作
             Hide();                 // 隐藏窗体
+
+            // 保存播放列表
+            string newContent = "";
+            for (int i = 0; i < audioList.Count; i++)
+            {
+                newContent += audioList[i][0] + Environment.NewLine;
+            }
+            if (!string.IsNullOrWhiteSpace(newContent))
+            {
+                File.WriteAllText("Asset\\musicList.txt", newContent);
+            }
         }
 
         private void btnReset_Click(object sender, EventArgs e)
