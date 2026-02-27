@@ -22,6 +22,7 @@ namespace TimerAndAlerm
         private int currentTrackIndex;
         private long pausedPosition;
         private string[] musicList;
+        private Timer? scheduledTimer;
 
         public Form1()
         {
@@ -467,7 +468,8 @@ namespace TimerAndAlerm
                     }
                     else
                     {
-                        if (audioList.Count <= currentTrackIndex + 1) { button6.Text = "播放"; return; };
+                        if (audioList.Count <= currentTrackIndex + 1) { button6.Text = "播放"; return; }
+                        ;
                         currentTrackIndex++;
                         PlayCurrentTrack();
                     }
@@ -536,11 +538,71 @@ namespace TimerAndAlerm
                 RingTheBell("Asset\\fzn15.mp3");
                 button10.Enabled = false;
             }
-            
+
         }
 
         private void btnLogOrders_Click(object sender, EventArgs e)
         {
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            if (button11.Text == "Cancel")
+            {
+                // 取消定时提醒
+                if (scheduledTimer != null)
+                {
+                    scheduledTimer.Stop();
+                    scheduledTimer.Dispose();
+                    scheduledTimer = null;
+                }
+                button11.Text = "Start";
+                nudHour.Enabled = true;
+                nudMinute.Enabled = true;
+                return;
+            }
+
+            // 获取用户选择的时分（按当地时间）
+            int selectedHour = (int)nudHour.Value;
+            int selectedMinute = (int)nudMinute.Value;
+            var now = DateTime.Now;
+            var target = new DateTime(now.Year, now.Month, now.Day, selectedHour, selectedMinute, 0);
+
+            // 如果设定时间已过，设为明天
+            if (target <= now)
+            {
+                target = target.AddDays(1);
+            }
+
+            button11.Text = "Cancel";
+            nudHour.Enabled = false;
+            nudMinute.Enabled = false;
+
+            // 每秒检查是否到达目标时间
+            scheduledTimer = new Timer();
+            scheduledTimer.Interval = 1000;
+            scheduledTimer.Tick += (s, ev) =>
+            {
+                var currentTime = DateTime.Now;
+                if (currentTime.Hour == target.Hour && currentTime.Minute == target.Minute && currentTime.Second == 0)
+                {
+                    scheduledTimer.Stop();
+                    scheduledTimer.Dispose();
+                    scheduledTimer = null;
+                    button11.Text = "Start";
+                    nudHour.Enabled = true;
+                nudMinute.Enabled = true;
+
+                    // 播放提示音
+                    PlayNotificationAudio("Asset\\daojishi.mp3");
+
+                    // 弹出全屏提醒
+                    FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm(
+                        $"定时提醒：{currentTime:HH:mm} 到了！");
+                    fullScreenMessage.ShowDialog();
+                }
+            };
+            scheduledTimer.Start();
         }
     }
 }

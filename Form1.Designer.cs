@@ -50,13 +50,20 @@
             label4 = new Label();
             label5 = new Label();
             button10 = new Button();
+            label6 = new Label();
+            nudHour = new NumericUpDown();
+            nudMinute = new NumericUpDown();
+            lblColon = new Label();
+            button11 = new Button();
+            ((System.ComponentModel.ISupportInitialize)nudHour).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)nudMinute).BeginInit();
             SuspendLayout();
             // 
             // buttonStart
             // 
-            buttonStart.Location = new Point(12, 63);
+            buttonStart.Location = new Point(97, 63);
             buttonStart.Name = "buttonStart";
-            buttonStart.Size = new Size(88, 35);
+            buttonStart.Size = new Size(59, 35);
             buttonStart.TabIndex = 0;
             buttonStart.Text = "Start";
             buttonStart.UseVisualStyleBackColor = true;
@@ -64,9 +71,9 @@
             // 
             // button1
             // 
-            button1.Location = new Point(106, 63);
+            button1.Location = new Point(164, 63);
             button1.Name = "button1";
-            button1.Size = new Size(82, 35);
+            button1.Size = new Size(55, 35);
             button1.TabIndex = 1;
             button1.Text = "Stop";
             button1.UseVisualStyleBackColor = true;
@@ -82,9 +89,9 @@
             // 
             // btnReset
             // 
-            btnReset.Location = new Point(204, 63);
+            btnReset.Location = new Point(225, 63);
             btnReset.Name = "btnReset";
-            btnReset.Size = new Size(75, 35);
+            btnReset.Size = new Size(55, 35);
             btnReset.TabIndex = 3;
             btnReset.Text = "Reset";
             btnReset.UseVisualStyleBackColor = true;
@@ -93,7 +100,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(25, 115);
+            label1.Location = new Point(14, 73);
             label1.Name = "label1";
             label1.Size = new Size(37, 15);
             label1.TabIndex = 4;
@@ -102,7 +109,7 @@
             // button2
             // 
             button2.Font = new Font("Segoe UI", 9F);
-            button2.Location = new Point(72, 150);
+            button2.Location = new Point(135, 149);
             button2.Name = "button2";
             button2.Size = new Size(21, 23);
             button2.TabIndex = 5;
@@ -112,7 +119,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(136, 150);
+            button3.Location = new Point(199, 149);
             button3.Name = "button3";
             button3.Size = new Size(23, 23);
             button3.TabIndex = 6;
@@ -122,7 +129,7 @@
             // 
             // txbMins
             // 
-            txbMins.Location = new Point(99, 150);
+            txbMins.Location = new Point(162, 149);
             txbMins.Name = "txbMins";
             txbMins.Size = new Size(32, 23);
             txbMins.TabIndex = 7;
@@ -131,7 +138,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(22, 154);
+            label2.Location = new Point(85, 153);
             label2.Name = "label2";
             label2.Size = new Size(53, 15);
             label2.TabIndex = 8;
@@ -139,7 +146,7 @@
             // 
             // button4
             // 
-            button4.Location = new Point(163, 150);
+            button4.Location = new Point(12, 148);
             button4.Name = "button4";
             button4.Size = new Size(55, 23);
             button4.TabIndex = 9;
@@ -206,11 +213,11 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(25, 195);
+            label3.Location = new Point(14, 195);
             label3.Name = "label3";
-            label3.Size = new Size(54, 15);
+            label3.Size = new Size(79, 15);
             label3.TabIndex = 16;
-            label3.Text = "倒计时： ";
+            label3.Text = "倒计时进度： ";
             // 
             // button8
             // 
@@ -260,11 +267,65 @@
             button10.UseVisualStyleBackColor = true;
             button10.Click += button10_Click;
             // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(14, 114);
+            label6.Name = "label6";
+            label6.Size = new Size(62, 15);
+            label6.TabIndex = 21;
+            label6.Text = "定时提醒：";
+            // 
+            // nudHour
+            // 
+            nudHour.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            nudHour.Location = new Point(97, 107);
+            nudHour.Maximum = new decimal(new int[] { 23, 0, 0, 0 });
+            nudHour.Name = "nudHour";
+            nudHour.Size = new Size(59, 29);
+            nudHour.TabIndex = 22;
+            nudHour.TextAlign = HorizontalAlignment.Center;
+            // 
+            // nudMinute
+            // 
+            nudMinute.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            nudMinute.Location = new Point(164, 106);
+            nudMinute.Maximum = new decimal(new int[] { 59, 0, 0, 0 });
+            nudMinute.Name = "nudMinute";
+            nudMinute.Size = new Size(55, 29);
+            nudMinute.TabIndex = 23;
+            nudMinute.TextAlign = HorizontalAlignment.Center;
+            // 
+            // lblColon
+            // 
+            lblColon.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblColon.Location = new Point(153, 107);
+            lblColon.Name = "lblColon";
+            lblColon.Size = new Size(15, 25);
+            lblColon.TabIndex = 25;
+            lblColon.Text = ":";
+            lblColon.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // button11
+            // 
+            button11.Location = new Point(225, 107);
+            button11.Name = "button11";
+            button11.Size = new Size(55, 29);
+            button11.TabIndex = 24;
+            button11.Text = "Start";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += button11_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(295, 446);
+            Controls.Add(button11);
+            Controls.Add(nudMinute);
+            Controls.Add(lblColon);
+            Controls.Add(nudHour);
+            Controls.Add(label6);
             Controls.Add(button10);
             Controls.Add(label5);
             Controls.Add(label4);
@@ -290,6 +351,8 @@
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "Form1";
             Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)nudHour).EndInit();
+            ((System.ComponentModel.ISupportInitialize)nudMinute).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -320,5 +383,10 @@
         private Button button10;
         private Button btnLogOrders;
         private Button btnStopLog;
+        private Label label6;
+        private NumericUpDown nudHour;
+        private NumericUpDown nudMinute;
+        private Label lblColon;
+        private Button button11;
     }
 }
