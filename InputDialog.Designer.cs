@@ -40,7 +40,7 @@
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(66, 23);
             buttonCancel.TabIndex = 0;
-            buttonCancel.Text = "Camcel";
+            buttonCancel.Text = "Cancel";
             buttonCancel.UseVisualStyleBackColor = true;
             buttonCancel.Click += buttonCancel_Click;
             // 

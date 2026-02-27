@@ -13,16 +13,17 @@ namespace TimerAndAlerm
         private Stopwatch stopwatch;
         private Timer alarmTimer;
         private Timer miaobiaotimer;
-        private Timer daojishitimer;
+        private Timer? daojishitimer;
         private List<string[]> audioList = new List<string[]>();
-        private IWavePlayer wavePlayer;
+        private IWavePlayer? wavePlayer;
         private AudioFileReader? audioFileReader;
-        private IWavePlayer notifyPlayer;
+        private IWavePlayer? notifyPlayer;
         private AudioFileReader? bellAudioFileReader;
         private int currentTrackIndex;
         private long pausedPosition;
         private string[] musicList;
         private Timer? scheduledTimer;
+        private int lastAlarmMinute = -1;
 
         public Form1()
         {
@@ -43,16 +44,21 @@ namespace TimerAndAlerm
             }
         }
 
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool DestroyIcon(IntPtr handle);
+
         private void InitializeNotifyIcon()
         {
             notifyIcon = new NotifyIcon();
             contextMenu = new ContextMenuStrip();
-            Bitmap iconBitmap = new Bitmap("Asset\\bell.png");
+            using Bitmap iconBitmap = new Bitmap("Asset\\bell.png");
 
             // 转换为 Icon
             IntPtr hIcon = iconBitmap.GetHicon();
-
-            notifyIcon.Icon = Icon.FromHandle(hIcon);  // 替换为你的应用图标
+            Icon tempIcon = Icon.FromHandle(hIcon);
+            notifyIcon.Icon = (Icon)tempIcon.Clone();
+            tempIcon.Dispose();
+            DestroyIcon(hIcon);
 
             ToolStripMenuItem showMenuItem = new ToolStripMenuItem("显示");
             ToolStripMenuItem exitMenuItem = new ToolStripMenuItem("退出");
@@ -87,24 +93,27 @@ namespace TimerAndAlerm
             if (beijintime.Hour == 5 || beijintime.Hour == 11 || beijintime.Hour == 17 || beijintime.Hour == 23)
             //if (true)
             {
-                if (beijintime.Minute == 54 && beijintime.Second == 0)
+                int currentAlarmKey = beijintime.Hour * 100 + beijintime.Minute;
+                if (beijintime.Minute == 54 && lastAlarmMinute != currentAlarmKey)
                 //if (beijintime.Second == 0)
                 {
-                    Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick0");
+                    lastAlarmMinute = currentAlarmKey;
+                    Debug.WriteLine($"{DateTime.Now:HH:mm:ss.fff}: AlarmTimer_Tick0");
 
                     PlayNotificationAudio("Asset\\daojishi.mp3");
 
-                    FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime.ToString("HH:mm:ss")} 到了，准备发正念。当前本地时间 {DateTime.Now.ToString("HH:mm:ss")}");
+                    FullScreenMessageForm fullScreenMessage = new FullScreenMessageForm($"北京时间 {beijintime:HH:mm:ss} 到了，准备发正念。当前本地时间 {DateTime.Now:HH:mm:ss}");
                     fullScreenMessage.ShowDialog();
-                    Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick1");
+                    Debug.WriteLine($"{DateTime.Now:HH:mm:ss.fff}: AlarmTimer_Tick1");
                 }
-                if (beijintime.Minute == 55 && beijintime.Second == 0)
+                if (beijintime.Minute == 55 && lastAlarmMinute != currentAlarmKey)
                 //if (beijintime.Second == 30)
                 {
-                    Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick2");
+                    lastAlarmMinute = currentAlarmKey;
+                    Debug.WriteLine($"{DateTime.Now:HH:mm:ss.fff}: AlarmTimer_Tick2");
 
                     RingTheBell("Asset\\fzn15.mp3");
-                    Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: AlarmTimer_Tick3");
+                    Debug.WriteLine($"{DateTime.Now:HH:mm:ss.fff}: AlarmTimer_Tick3");
                 }
             }
         }
@@ -139,6 +148,7 @@ namespace TimerAndAlerm
             {
                 wavePlayer.Stop();
                 wavePlayer.Dispose();
+                wavePlayer = null;
             }
 
             if (alarmTimer != null)
@@ -167,10 +177,7 @@ namespace TimerAndAlerm
             {
                 newContent += audioList[i][0] + Environment.NewLine;
             }
-            if (!string.IsNullOrWhiteSpace(newContent))
-            {
-                File.WriteAllText("Asset\\musicList.txt", newContent);
-            }
+            File.WriteAllText("Asset\\musicList.txt", newContent);
 
             System.Windows.Forms.Application.Exit(); // 退出应用程序
             Environment.Exit(0);
@@ -216,10 +223,7 @@ namespace TimerAndAlerm
             {
                 newContent += audioList[i][0] + Environment.NewLine;
             }
-            if (!string.IsNullOrWhiteSpace(newContent))
-            {
-                File.WriteAllText("Asset\\musicList.txt", newContent);
-            }
+            File.WriteAllText("Asset\\musicList.txt", newContent);
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -289,6 +293,14 @@ namespace TimerAndAlerm
             }
 
             //if (mins <= 0) return;
+            // 先停止已有的倒计时
+            if (daojishitimer != null)
+            {
+                daojishitimer.Stop();
+                daojishitimer.Dispose();
+                daojishitimer = null;
+            }
+
             progressBar1.Maximum = mins * 60;
             progressBar1.Minimum = 0;
             progressBar1.Value = mins * 60;
@@ -302,10 +314,10 @@ namespace TimerAndAlerm
                 if (progressBar1.Value <= 0)
                 {
                     if (daojishitimer != null)
-                    { // 停止定时器
+                    {
                         daojishitimer.Stop();
-                        // 销毁定时器
                         daojishitimer.Dispose();
+                        daojishitimer = null;
                     }
                     //Task.Run(() =>
                     //{
@@ -373,20 +385,22 @@ namespace TimerAndAlerm
                 {
                     notifyPlayer.Stop();
                     notifyPlayer.Dispose();
+                    notifyPlayer = null;
                 }
-                notifyPlayer = new WaveOut(); // 你也可以选择其他 IWavePlayer 实现
+                if (bellAudioFileReader != null)
+                {
+                    bellAudioFileReader.Dispose();
+                    bellAudioFileReader = null;
+                }
+                notifyPlayer = new WaveOut();
                 bellAudioFileReader = new AudioFileReader(filepath);
-                notifyPlayer.Volume = 1.0f;           // 相对于原始音量的比例
+                notifyPlayer.Volume = 1.0f;
                 notifyPlayer.Init(bellAudioFileReader);
-                //notifyPlayer.PlaybackStopped += (sender, e) =>
-                //{
-                //    notifyPlayer?.Dispose();
-                //};
                 notifyPlayer.Play();
             }
             catch (Exception ex)
             {
-                //
+                Debug.WriteLine($"PlayNotificationAudio: {ex.Message}, {ex.StackTrace}");
             }
         }
 
@@ -396,32 +410,41 @@ namespace TimerAndAlerm
             {
                 return;
             }
-            else
-            {
-                button10.Text = "聆听";
-                button10.Enabled = false;
-            }
-            Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: RingTheBell0");
+            button10.Text = "聆听";
+            button10.Enabled = false;
+            Debug.WriteLine($"{DateTime.Now:HH:mm:ss.fff}: RingTheBell0");
+            WaveOut? bellPlayer = null;
+            AudioFileReader? reader = null;
             try
             {
-                var bellPlayer = new WaveOut(); // 你也可以选择其他 IWavePlayer 实现
-                var bellAudioFileReader = new AudioFileReader(filepath);
-                bellPlayer.Volume = 0.99f;           // 相对于原始音量的比例
-                bellPlayer.Init(bellAudioFileReader);
+                bellPlayer = new WaveOut();
+                reader = new AudioFileReader(filepath);
+                bellPlayer.Volume = 0.99f;
+                bellPlayer.Init(reader);
                 bellPlayer.PlaybackStopped += (sender, e) =>
                 {
-                    if (button10.Text == "聆听")
+                    reader.Dispose();
+                    bellPlayer.Dispose();
+                    if (IsDisposed || !IsHandleCreated) return;
+                    BeginInvoke(() =>
                     {
-                        button10.Text = "敲钟";
-                        button10.Enabled = true;
-                    }
+                        if (button10.Text == "聆听")
+                        {
+                            button10.Text = "敲钟";
+                            button10.Enabled = true;
+                        }
+                    });
                 };
                 bellPlayer.Play();
-                Debug.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fff")}: RingTheBell1");
+                Debug.WriteLine($"{DateTime.Now:HH:mm:ss.fff}: RingTheBell1");
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"RingTheBell: {ex.Message}, {ex.StackTrace}");
+                reader?.Dispose();
+                bellPlayer?.Dispose();
+                button10.Text = "敲钟";
+                button10.Enabled = true;
             }
         }
 
@@ -448,6 +471,7 @@ namespace TimerAndAlerm
                     }
                     wavePlayer.Stop();
                     wavePlayer.Dispose();
+                    wavePlayer = null;
                 }
 
                 // 播放当前音轨
@@ -458,21 +482,23 @@ namespace TimerAndAlerm
                 wavePlayer.Init(audioFileReader);
                 wavePlayer.PlaybackStopped += (sender, e) =>
                 {
-                    //if (wavePlayer.PlaybackState == PlaybackState.Paused) return;
-                    if (button6.Text == "恢复") return;
-                    if (checkBox1.Checked)
+                    if (IsDisposed || !IsHandleCreated) return;
+                    BeginInvoke(() =>
                     {
-                        if (audioList.Count <= currentTrackIndex + 1) currentTrackIndex = -1;
-                        currentTrackIndex++;
-                        PlayCurrentTrack();
-                    }
-                    else
-                    {
-                        if (audioList.Count <= currentTrackIndex + 1) { button6.Text = "播放"; return; }
-                        ;
-                        currentTrackIndex++;
-                        PlayCurrentTrack();
-                    }
+                        if (button6.Text == "恢复") return;
+                        if (checkBox1.Checked)
+                        {
+                            if (audioList.Count <= currentTrackIndex + 1) currentTrackIndex = -1;
+                            currentTrackIndex++;
+                            PlayCurrentTrack();
+                        }
+                        else
+                        {
+                            if (audioList.Count <= currentTrackIndex + 1) { button6.Text = "播放"; return; }
+                            currentTrackIndex++;
+                            PlayCurrentTrack();
+                        }
+                    });
                 };
                 wavePlayer.Play();
                 button6.Text = "暂停";
@@ -485,7 +511,11 @@ namespace TimerAndAlerm
             }
             catch (Exception ex)
             {
-                //
+                Debug.WriteLine($"PlayCurrentTrack: {ex.Message}, {ex.StackTrace}");
+                audioFileReader?.Dispose();
+                audioFileReader = null!;
+                wavePlayer?.Dispose();
+                wavePlayer = null;
             }
         }
 
@@ -507,6 +537,7 @@ namespace TimerAndAlerm
             {
                 wavePlayer.Stop();
                 wavePlayer.Dispose();
+                wavePlayer = null;
             }
 
             txbAudios.Text = "";
@@ -524,6 +555,7 @@ namespace TimerAndAlerm
             {
                 wavePlayer.Stop();
                 wavePlayer.Dispose();
+                wavePlayer = null;
             }
             audioList.Clear();
             txbAudios.Text = "";
@@ -534,11 +566,8 @@ namespace TimerAndAlerm
         {
             if (button10.Text == "敲钟")
             {
-                //button10.Text = "聆听";
                 RingTheBell("Asset\\fzn15.mp3");
-                button10.Enabled = false;
             }
-
         }
 
         private void btnLogOrders_Click(object sender, EventArgs e)
@@ -584,14 +613,14 @@ namespace TimerAndAlerm
             scheduledTimer.Tick += (s, ev) =>
             {
                 var currentTime = DateTime.Now;
-                if (currentTime.Hour == target.Hour && currentTime.Minute == target.Minute && currentTime.Second == 0)
+                if (currentTime >= target)
                 {
                     scheduledTimer.Stop();
                     scheduledTimer.Dispose();
                     scheduledTimer = null;
                     button11.Text = "Start";
                     nudHour.Enabled = true;
-                nudMinute.Enabled = true;
+                    nudMinute.Enabled = true;
 
                     // 播放提示音
                     PlayNotificationAudio("Asset\\daojishi.mp3");

@@ -41,8 +41,9 @@ namespace TimerAndAlerm
             closeButton.Margin = new Padding(0, 40, 0, 0);
             this.Controls.Add(closeButton);
 
-            // 手动调整消息文本的位置和大小
-            lblMessage.Location = new Point(1982 / 2 - 120, 1084 / 2 - 50);
+            // 根据当前屏幕尺寸居中消息文本
+            var screen = Screen.FromControl(this);
+            lblMessage.Location = new Point(screen.Bounds.Width / 2 - 120, screen.Bounds.Height / 2 - 50);
             lblMessage.TextAlign = ContentAlignment.MiddleCenter;
 
             // 设置 TextBox 的新字体
