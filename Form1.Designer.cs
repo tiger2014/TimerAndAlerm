@@ -308,7 +308,7 @@ namespace TimerAndAlerm
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F);
-            label3.Location = new Point(10, 96);
+            label3.Location = new Point(10, 91);
             label3.Name = "label3";
             label3.Size = new Size(105, 21);
             label3.TabIndex = 16;
@@ -316,9 +316,9 @@ namespace TimerAndAlerm
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(107, 91);
+            progressBar1.Location = new Point(121, 91);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(218, 20);
+            progressBar1.Size = new Size(204, 20);
             progressBar1.TabIndex = 10;
             // 
             // panelAudio
