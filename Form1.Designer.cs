@@ -101,7 +101,7 @@ namespace TimerAndAlerm
             button10.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button10.Location = new Point(238, 10);
             button10.Name = "button10";
-            button10.Size = new Size(83, 44);
+            button10.Size = new Size(87, 44);
             button10.TabIndex = 20;
             button10.Text = "敲钟";
             button10.UseVisualStyleBackColor = true;
