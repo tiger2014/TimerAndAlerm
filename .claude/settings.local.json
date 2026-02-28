@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /c/Develope/workspace rev-parse --git-dir)",
+      "Bash(git -C /c/Develope rev-parse --git-dir)",
+      "Bash(gh repo list --json name,url -q '.[] | select\\(.name | test\\(\"\"Timer|Alerm|timer|alarm\"\"; \"\"i\"\"\\)\\) | \"\"\\\\\\(.name\\) \\\\\\(.url\\)\"\"')",
+      "Bash(gh auth status)",
+      "Bash(git init)",
+      "Bash(git remote add origin https://github.com/tiger2014/TimerAndAlerm.git)",
+      "Bash(git fetch origin)",
+      "Bash(git checkout -b master)",
+      "Bash(git reset --mixed origin/master)",
+      "Bash(git add Form1.Designer.cs Form1.cs Form1.resx)",
+      "Bash(git commit:*)",
+      "Bash(git push -u origin master)",
+      "Bash(git checkout origin/master -- .gitattributes)",
+      "Bash(git add Form1.cs FullScreenMessageForm.cs InputDialog.Designer.cs)",
+      "Bash(git push)"
+    ]
+  }
+}

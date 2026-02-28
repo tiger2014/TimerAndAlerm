@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TimerAndAlerm
@@ -20,36 +14,42 @@ namespace TimerAndAlerm
 
         private void FullScreenMessageForm_Load(object sender, EventArgs e)
         {
-            // 设置窗体为全屏
+            // 全屏无边框
             this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.None;
+            this.TopMost = true;
 
+            // 深色背景
+            this.BackColor = ColorTranslator.FromHtml("#1A1A2E");
 
-            // 获取当前字体
-            Font currentFont = lblMessage.Font;
-            // 创建新字体，修改字体大小为14
-            Font newFont = new Font(currentFont.FontFamily, 20, currentFont.Style);
+            // 消息标签样式
+            Font msgFont = new Font("Segoe UI", 24, FontStyle.Bold);
+            lblMessage.Font = msgFont;
+            lblMessage.ForeColor = ThemeColors.ClockText;
+            lblMessage.AutoSize = true;
 
-            // 添加关闭按钮
-            Button closeButton = new Button();
-            closeButton.Font = newFont;
-            closeButton.Height = 60;
-            closeButton.Text = "关闭";
-            closeButton.Click += (s, ev) => this.Close();
-            closeButton.Dock = DockStyle.Top;
-            // 设置按钮的上下边距
-            closeButton.Margin = new Padding(0, 40, 0, 0);
-            this.Controls.Add(closeButton);
-
-            // 根据当前屏幕尺寸居中消息文本
+            // 居中消息
             var screen = Screen.FromControl(this);
-            lblMessage.Location = new Point(screen.Bounds.Width / 2 - 120, screen.Bounds.Height / 2 - 50);
+            lblMessage.MaximumSize = new Size(screen.Bounds.Width - 200, 0);
+            lblMessage.Location = new Point(
+                (screen.Bounds.Width - lblMessage.PreferredWidth) / 2,
+                (screen.Bounds.Height - lblMessage.PreferredHeight) / 2
+            );
             lblMessage.TextAlign = ContentAlignment.MiddleCenter;
 
-            // 设置 TextBox 的新字体
-            lblMessage.Font = newFont;
-
-            this.TopMost = true;
+            // 关闭按钮
+            Button closeButton = new Button();
+            closeButton.Text = "关闭";
+            closeButton.Font = new Font("Segoe UI", 14F, FontStyle.Regular);
+            closeButton.Size = new Size(160, 50);
+            closeButton.Location = new Point((screen.Bounds.Width - 160) / 2, screen.Bounds.Height - 120);
+            closeButton.FlatStyle = FlatStyle.Flat;
+            closeButton.FlatAppearance.BorderSize = 0;
+            closeButton.BackColor = ThemeColors.Primary;
+            closeButton.ForeColor = Color.White;
+            closeButton.Cursor = Cursors.Hand;
+            closeButton.Click += (s, ev) => this.Close();
+            this.Controls.Add(closeButton);
         }
     }
 }

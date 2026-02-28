@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TimerAndAlerm
@@ -16,12 +10,29 @@ namespace TimerAndAlerm
         public InputDialog()
         {
             InitializeComponent();
+            ApplyTheme();
         }
 
         public InputDialog(string inputdata)
         {
             InitializeComponent();
+            ApplyTheme();
             textBox1.Text = inputdata;
+        }
+
+        private void ApplyTheme()
+        {
+            this.BackColor = ThemeColors.FormBackground;
+            this.ForeColor = ThemeColors.TextPrimary;
+
+            label1.ForeColor = ThemeColors.TextPrimary;
+
+            textBox1.BackColor = ThemeColors.TextBoxBackground;
+            textBox1.ForeColor = ThemeColors.TextPrimary;
+            textBox1.BorderStyle = BorderStyle.FixedSingle;
+
+            ThemeHelper.StyleButton(buttonOK, ButtonRole.Success);
+            ThemeHelper.StyleButton(buttonCancel, ButtonRole.Neutral);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

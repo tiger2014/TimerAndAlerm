@@ -28,11 +28,11 @@ namespace TimerAndAlerm
         public Form1()
         {
             InitializeComponent();
+            ApplyDarkTheme();
             InitializeNotifyIcon();
             InitializeStopwatch();
             InitializeAlarmTimer();
             this.FormClosing += Form1_FormClosing; // 确保连接 FormClosing 事件
-            this.Text = "Assistant";
             musicList = File.ReadAllLines("Asset\\musicList.txt");
 
             for (int i = 0; i < musicList.Count(); i++)
@@ -42,6 +42,16 @@ namespace TimerAndAlerm
                 audioList.Add(audio);
                 txbAudios.Text += audioList[i][1] + Environment.NewLine;
             }
+        }
+
+        private void ApplyDarkTheme()
+        {
+            // Apply classic Windows light theme
+            ThemeHelper.ApplyTheme(this);
+
+            // Colors only — font is controlled by Designer (Form1.Designer.cs)
+            label5.ForeColor = SystemColors.ControlText;
+            lblStopwatch.ForeColor = SystemColors.ControlText;
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -304,7 +314,6 @@ namespace TimerAndAlerm
             progressBar1.Maximum = mins * 60;
             progressBar1.Minimum = 0;
             progressBar1.Value = mins * 60;
-            progressBar1.ForeColor = Color.OrangeRed;
 
             daojishitimer = new Timer();
             daojishitimer.Interval = 1000;
