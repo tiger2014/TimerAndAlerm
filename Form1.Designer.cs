@@ -277,7 +277,7 @@ namespace TimerAndAlerm
             // txbMins
             // 
             txbMins.Font = new Font("Segoe UI", 12F);
-            txbMins.Location = new Point(172, 48);
+            txbMins.Location = new Point(172, 45);
             txbMins.Name = "txbMins";
             txbMins.Size = new Size(38, 29);
             txbMins.TabIndex = 7;
