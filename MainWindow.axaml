@@ -1,0 +1,184 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TimerAndAlerm.MainWindow"
+        Title="Assistant"
+        Width="350" Height="560"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,5,0,10">
+
+            <!-- panel 1：时钟 + 敲钟 -->
+            <Border BorderBrush="#B4B4B4" BorderThickness="1" Margin="10,5,10,0" Padding="6">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <TextBlock Grid.Column="0"
+                               Text="北京时间:"
+                               FontSize="14"
+                               VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1"
+                               x:Name="ClockText"
+                               Text="00:00:00"
+                               FontSize="28"
+                               FontWeight="Bold"
+                               FontFamily="Cascadia Code,Menlo,Consolas,Courier New"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                    <Button Grid.Column="2"
+                            x:Name="BellButton"
+                            Content="敲钟"
+                            Width="80" Height="44"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Click="OnBellClick" />
+                </Grid>
+            </Border>
+
+            <!-- panel 2：秒表 -->
+            <Border BorderBrush="#B4B4B4" BorderThickness="1" Margin="10,5,10,0" Padding="6">
+                <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*">
+                    <TextBlock Grid.Column="0"
+                               Text="秒表："
+                               FontSize="14"
+                               VerticalAlignment="Center"
+                               Margin="0,0,6,0" />
+                    <Button Grid.Column="1"
+                            x:Name="StopwatchStartButton"
+                            Content="Start"
+                            Width="80" Height="40"
+                            Click="OnStopwatchStart" />
+                    <Button Grid.Column="2"
+                            x:Name="StopwatchStopButton"
+                            Content="Stop"
+                            Width="80" Height="40"
+                            Margin="6,0,0,0"
+                            Click="OnStopwatchStop" />
+                    <Button Grid.Column="3"
+                            x:Name="StopwatchResetButton"
+                            Content="Reset"
+                            Width="80" Height="40"
+                            Margin="6,0,0,0"
+                            Click="OnStopwatchReset" />
+                    <TextBlock Grid.Column="4"
+                               x:Name="StopwatchText"
+                               Text="00:00:00.000"
+                               FontFamily="Cascadia Code,Menlo,Consolas,Courier New"
+                               FontWeight="Bold"
+                               Margin="6,0,0,0"
+                               VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+
+            <!-- panel 3：定时提醒 + 倒计时 -->
+            <Border BorderBrush="#B4B4B4" BorderThickness="1" Margin="10,5,10,0" Padding="6">
+                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+
+                    <!-- 第 1 行：定时提醒 -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="定时提醒："
+                                   FontSize="14"
+                                   VerticalAlignment="Center" />
+                        <NumericUpDown x:Name="HourInput"
+                                       Minimum="0" Maximum="23" Value="0"
+                                       Width="70"
+                                       FormatString="00" />
+                        <TextBlock Text=":"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"
+                                   Margin="2,0" />
+                        <NumericUpDown x:Name="MinuteInput"
+                                       Minimum="0" Maximum="59" Value="0"
+                                       Width="70"
+                                       FormatString="00" />
+                        <Button x:Name="ScheduleButton"
+                                Content="Start"
+                                Width="80" Height="30"
+                                Margin="6,0,0,0"
+                                Click="OnScheduleClick" />
+                    </StackPanel>
+
+                    <!-- 第 2 行：倒计时输入 -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="4">
+                        <Button x:Name="CountdownStartButton"
+                                Content="倒计时"
+                                Width="64" Height="30"
+                                Click="OnCountdownStart" />
+                        <TextBlock Text="分钟数："
+                                   VerticalAlignment="Center"
+                                   Margin="6,0" />
+                        <Button x:Name="MinusButton"
+                                Content="-"
+                                Width="28" Height="28"
+                                Click="OnMinusClick" />
+                        <TextBox x:Name="MinutesBox"
+                                 Text=""
+                                 Width="40"
+                                 TextAlignment="Center"
+                                 Margin="2,0" />
+                        <Button x:Name="PlusButton"
+                                Content="+"
+                                Width="28" Height="28"
+                                Click="OnPlusClick" />
+                        <Button x:Name="CountdownCancelButton"
+                                Content="取消"
+                                Width="60" Height="30"
+                                Margin="6,0,0,0"
+                                Click="OnCountdownCancel" />
+                    </StackPanel>
+
+                    <!-- 第 3 行：进度条 -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <TextBlock Text="进度："
+                                   VerticalAlignment="Center" />
+                        <ProgressBar x:Name="CountdownProgress"
+                                     Width="240" Height="20"
+                                     Margin="6,0,0,0"
+                                     Minimum="0" Maximum="100" Value="0" />
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+
+            <!-- panel 4：音频播放器 -->
+            <Border BorderBrush="#B4B4B4" BorderThickness="1" Margin="10,5,10,0" Padding="6">
+                <Grid RowDefinitions="Auto,Auto,*" RowSpacing="6">
+
+                    <!-- 第 1 行：按钮组 -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="6">
+                        <Button x:Name="AddAudioButton"
+                                Content="添加音频"
+                                Width="80" Height="30"
+                                Click="OnAddAudio" />
+                        <Button x:Name="ClearAudioButton"
+                                Content="清空列表"
+                                Width="80" Height="30"
+                                Click="OnClearAudio" />
+                        <Button x:Name="PlayAudioButton"
+                                Content="播放"
+                                Width="60" Height="30"
+                                Click="OnPlayAudio" />
+                        <Button x:Name="StopAudioButton"
+                                Content="停止"
+                                Width="60" Height="30"
+                                Click="OnStopAudio" />
+                    </StackPanel>
+
+                    <!-- 第 2 行：循环播放选项 -->
+                    <CheckBox Grid.Row="1"
+                              x:Name="LoopCheckBox"
+                              Content="循环播放" />
+
+                    <!-- 第 3 行：播放列表 TextBox -->
+                    <TextBox Grid.Row="2"
+                             x:Name="AudioListBox"
+                             AcceptsReturn="True"
+                             IsReadOnly="True"
+                             Height="170" />
+
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</Window>

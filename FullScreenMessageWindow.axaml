@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TimerAndAlerm.FullScreenMessageWindow"
+        WindowState="FullScreen"
+        Topmost="True"
+        SystemDecorations="None"
+        CanResize="False"
+        ShowInTaskbar="False"
+        Background="#1A1A2E"
+        KeyDown="OnKeyDown">
+    <DockPanel>
+        <Button x:Name="CloseButton"
+                DockPanel.Dock="Bottom"
+                Content="关闭"
+                Width="200" Height="60"
+                FontSize="18"
+                Background="#6C63FF"
+                Foreground="White"
+                HorizontalAlignment="Center"
+                Margin="0,0,0,80"
+                Cursor="Hand"
+                Click="OnCloseClick" />
+        <TextBlock x:Name="MessageText"
+                   FontSize="36"
+                   FontWeight="Bold"
+                   Foreground="#00D4FF"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   MaxWidth="1200"
+                   Margin="100" />
+    </DockPanel>
+</Window>
