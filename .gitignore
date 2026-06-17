@@ -221,6 +221,9 @@ Package.StoreAssociation.xml
 
 # Local development containers
 .devcontainer/
+
+# Local AI tooling
+.serena/
 _pkginfo.txt
 *.appx
 *.appxbundle
