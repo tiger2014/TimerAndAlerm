@@ -260,6 +260,50 @@ public partial class MainWindow : Window
         MinutesBox.Text = "";
     }
 
+    // ─── 定时提醒 时/分 ▲▼ ───
+
+    /// <summary>读时/分输入框的数值；非法时按 0，并夹到 [0,max]。</summary>
+    private static int ParseTimeField(TextBox box, int max)
+    {
+        if (!int.TryParse(box.Text, out var v) || v < 0) return 0;
+        return v > max ? max : v;
+    }
+
+    private void OnHourUp(object? sender, RoutedEventArgs e)
+    {
+        int v = ParseTimeField(ReminderHourBox, 23);
+        ReminderHourBox.Text = (v >= 23 ? 0 : v + 1).ToString("00");   // 到 23 回绕到 0
+    }
+
+    private void OnHourDown(object? sender, RoutedEventArgs e)
+    {
+        int v = ParseTimeField(ReminderHourBox, 23);
+        ReminderHourBox.Text = (v <= 0 ? 23 : v - 1).ToString("00");   // 到 0 回绕到 23
+    }
+
+    private void OnMinuteUp(object? sender, RoutedEventArgs e)
+    {
+        int v = ParseTimeField(ReminderMinuteBox, 59);
+        ReminderMinuteBox.Text = (v >= 59 ? 0 : v + 1).ToString("00"); // 到 59 回绕到 0
+    }
+
+    private void OnMinuteDown(object? sender, RoutedEventArgs e)
+    {
+        int v = ParseTimeField(ReminderMinuteBox, 59);
+        ReminderMinuteBox.Text = (v <= 0 ? 59 : v - 1).ToString("00"); // 到 0 回绕到 59
+    }
+
+    /// <summary>统一启停定时提醒的时/分输入框及其 ▲▼ 按钮（计时中禁用）。</summary>
+    private void SetReminderInputsEnabled(bool enabled)
+    {
+        ReminderHourBox.IsEnabled = enabled;
+        ReminderMinuteBox.IsEnabled = enabled;
+        HourUpButton.IsEnabled = enabled;
+        HourDownButton.IsEnabled = enabled;
+        MinuteUpButton.IsEnabled = enabled;
+        MinuteDownButton.IsEnabled = enabled;
+    }
+
     // ─── 定时提醒 Start/Cancel ───
 
     private void OnScheduleClick(object? sender, RoutedEventArgs e)
@@ -269,20 +313,30 @@ public partial class MainWindow : Window
             _scheduledTimer?.Stop();
             _scheduledTimer = null;
             ScheduleButton.Content = "Start";
-            HourInput.IsEnabled = true;
-            MinuteInput.IsEnabled = true;
+            SetReminderInputsEnabled(true);
+            ScheduleStatusText.IsVisible = false;   // 取消后隐藏"将于…提醒"
             return;
         }
 
-        int hour = (int)(HourInput.Value ?? 0);
-        int minute = (int)(MinuteInput.Value ?? 0);
+        int hour = ParseTimeField(ReminderHourBox, 23);
+        int minute = ParseTimeField(ReminderMinuteBox, 59);
+        // 规范化回写，去掉用户输入的非法字符 / 补零
+        ReminderHourBox.Text = hour.ToString("00");
+        ReminderMinuteBox.Text = minute.ToString("00");
+
         var now = DateTime.Now;
         _scheduledTarget = new DateTime(now.Year, now.Month, now.Day, hour, minute, 0);
         if (_scheduledTarget <= now) _scheduledTarget = _scheduledTarget.AddDays(1);
 
         ScheduleButton.Content = "Cancel";
-        HourInput.IsEnabled = false;
-        MinuteInput.IsEnabled = false;
+        SetReminderInputsEnabled(false);
+
+        // 显示将要提醒的本地时刻；跨到明天时标注，避免误以为是几分钟后
+        bool isTomorrow = _scheduledTarget.Date > now.Date;
+        ScheduleStatusText.Text = isTomorrow
+            ? $"Will notify at {_scheduledTarget:HH:mm} tomorrow (local time)"
+            : $"Will notify at {_scheduledTarget:HH:mm} (local time)";
+        ScheduleStatusText.IsVisible = true;
 
         _scheduledTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _scheduledTimer.Tick += OnScheduledTick;
@@ -296,8 +350,8 @@ public partial class MainWindow : Window
         _scheduledTimer?.Stop();
         _scheduledTimer = null;
         ScheduleButton.Content = "Start";
-        HourInput.IsEnabled = true;
-        MinuteInput.IsEnabled = true;
+        SetReminderInputsEnabled(true);
+        ScheduleStatusText.IsVisible = false;   // 已触发，清掉提示
 
         PlayNotificationSound("daojishi.mp3");
         var win = new FullScreenMessageWindow($"Reminder: {DateTime.Now:HH:mm} is here.");

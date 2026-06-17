@@ -17,6 +17,8 @@
                 Background="#6C63FF"
                 Foreground="White"
                 HorizontalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
                 Margin="0,0,0,80"
                 Cursor="Hand"
                 Click="OnCloseClick" />

@@ -2,9 +2,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="TimerAndAlerm.MainWindow"
         Title="Timer and Alarm"
-        Width="520" Height="560"
+        Width="476" Height="560"
         CanResize="False"
         WindowStartupLocation="CenterScreen">
+
+    <Window.Styles>
+        <!-- 所有按钮的文字水平 + 垂直居中（高按钮如 Bell/秒表键文字默认贴顶） -->
+        <Style Selector="Button">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Styles>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="0,5,0,10">
@@ -15,6 +23,7 @@
                     <TextBlock Grid.Column="0"
                                Text="Beijing:"
                                FontSize="14"
+                               TextAlignment="Center"
                                VerticalAlignment="Center" />
                     <TextBlock Grid.Column="1"
                                x:Name="ClockText"
@@ -22,6 +31,7 @@
                                FontSize="28"
                                FontWeight="Bold"
                                FontFamily="Cascadia Code,Menlo,Consolas,Courier New"
+                               TextAlignment="Center"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center" />
                     <Button Grid.Column="2"
@@ -40,6 +50,7 @@
                     <TextBlock Grid.Column="0"
                                Text="Stopwatch:"
                                FontSize="14"
+                               TextAlignment="Center"
                                VerticalAlignment="Center"
                                Margin="0,0,6,0" />
                     <Button Grid.Column="1"
@@ -65,45 +76,97 @@
                                FontFamily="Cascadia Code,Menlo,Consolas,Courier New"
                                FontWeight="Bold"
                                Margin="6,0,0,0"
+                               TextAlignment="Center"
                                VerticalAlignment="Center" />
                 </Grid>
             </Border>
 
             <!-- panel 3：定时提醒 + 倒计时 -->
             <Border BorderBrush="#B4B4B4" BorderThickness="1" Margin="10,5,10,0" Padding="6">
-                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
 
-                    <!-- 第 1 行：定时提醒 -->
+                    <!-- 第 1 行：定时提醒（小时/分钟用自绘的"数值框 + ▲▼"，不用 NumericUpDown） -->
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="4">
                         <TextBlock Text="Reminder:"
                                    FontSize="14"
+                                   TextAlignment="Center"
                                    VerticalAlignment="Center" />
-                        <NumericUpDown x:Name="HourInput"
-                                       Minimum="0" Maximum="23" Value="0"
-                                       Width="70"
-                                       FormatString="00" />
+
+                        <!-- 小时输入框 -->
+                        <TextBox x:Name="ReminderHourBox"
+                                 Text="00"
+                                 Width="75" Height="44"
+                                 FontSize="20" FontWeight="Bold"
+                                 TextAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 MaxLength="2" />
+                        <!-- 小时 ▲▼ -->
+                        <StackPanel Orientation="Vertical" Spacing="2" VerticalAlignment="Center">
+                            <Button x:Name="HourUpButton"
+                                    Content="▲"
+                                    Width="34" Height="20"
+                                    FontSize="11" Padding="0"
+                                    Click="OnHourUp" />
+                            <Button x:Name="HourDownButton"
+                                    Content="▼"
+                                    Width="34" Height="20"
+                                    FontSize="11" Padding="0"
+                                    Click="OnHourDown" />
+                        </StackPanel>
+
                         <TextBlock Text=":"
                                    FontWeight="Bold"
+                                   TextAlignment="Center"
                                    VerticalAlignment="Center"
                                    Margin="2,0" />
-                        <NumericUpDown x:Name="MinuteInput"
-                                       Minimum="0" Maximum="59" Value="0"
-                                       Width="70"
-                                       FormatString="00" />
+
+                        <!-- 分钟输入框 -->
+                        <TextBox x:Name="ReminderMinuteBox"
+                                 Text="00"
+                                 Width="75" Height="44"
+                                 FontSize="20" FontWeight="Bold"
+                                 TextAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 MaxLength="2" />
+                        <!-- 分钟 ▲▼ -->
+                        <StackPanel Orientation="Vertical" Spacing="2" VerticalAlignment="Center">
+                            <Button x:Name="MinuteUpButton"
+                                    Content="▲"
+                                    Width="34" Height="20"
+                                    FontSize="11" Padding="0"
+                                    Click="OnMinuteUp" />
+                            <Button x:Name="MinuteDownButton"
+                                    Content="▼"
+                                    Width="34" Height="20"
+                                    FontSize="11" Padding="0"
+                                    Click="OnMinuteDown" />
+                        </StackPanel>
+
                         <Button x:Name="ScheduleButton"
                                 Content="Start"
-                                Width="80" Height="30"
+                                Width="80" Height="44"
                                 Margin="6,0,0,0"
                                 Click="OnScheduleClick" />
                     </StackPanel>
 
-                    <!-- 第 2 行：倒计时输入 -->
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="4">
+                    <!-- 第 2 行：已设定的提醒时刻显示 -->
+                    <TextBlock x:Name="ScheduleStatusText"
+                               Grid.Row="1"
+                               Text=""
+                               FontSize="13"
+                               FontWeight="Bold"
+                               Foreground="#2E7D32"
+                               HorizontalAlignment="Center"
+                               IsVisible="False" />
+
+                    <!-- 第 3 行：倒计时输入 -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="4">
                         <Button x:Name="CountdownStartButton"
                                 Content="Countdown"
                                 Width="96" Height="30"
                                 Click="OnCountdownStart" />
                         <TextBlock Text="Minutes:"
+                                   TextAlignment="Center"
                                    VerticalAlignment="Center"
                                    Margin="6,0" />
                         <Button x:Name="MinusButton"
@@ -127,9 +190,10 @@
                                 Click="OnCountdownCancel" />
                     </StackPanel>
 
-                    <!-- 第 3 行：进度条 -->
-                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <!-- 第 4 行：进度条 -->
+                    <StackPanel Grid.Row="3" Orientation="Horizontal">
                         <TextBlock Text="Progress:"
+                                   TextAlignment="Center"
                                    VerticalAlignment="Center" />
                         <ProgressBar x:Name="CountdownProgress"
                                      Width="240" Height="20"
@@ -174,6 +238,7 @@
                              x:Name="AudioListBox"
                              AcceptsReturn="True"
                              IsReadOnly="True"
+                             TextAlignment="Center"
                              Height="170" />
 
                 </Grid>
