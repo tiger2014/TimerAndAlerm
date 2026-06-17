@@ -44,6 +44,7 @@ public partial class MainWindow : Window
     private IAudioPlayer? _notifyPlayer;
     /// <summary>"敲钟"按钮用的 player。</summary>
     private IAudioPlayer? _bellPlayer;
+    private bool _audioErrorShown;
 
     public MainWindow()
     {
@@ -95,9 +96,8 @@ public partial class MainWindow : Window
         {
             _lastAlarmKey = currentKey;
             PlayNotificationSound("daojishi.mp3");
-            // 非模态全屏弹窗，避免阻塞 timer
             var win = new FullScreenMessageWindow(
-                $"北京时间 {beijing:HH:mm:ss} 到了，准备发正念。当前本地时间 {DateTime.Now:HH:mm:ss}");
+                $"Beijing time is {beijing:HH:mm:ss}. It is time to prepare. Local time is {DateTime.Now:HH:mm:ss}.");
             win.Show();
         }
         else if (beijing.Minute == 55 && _lastAlarmKey != currentKey)
@@ -113,30 +113,45 @@ public partial class MainWindow : Window
 
     private void RingBell()
     {
-        // 已经在敲了就忽略
-        if (BellButton.Content?.ToString() == "聆听") return;
-        BellButton.Content = "聆听";
+        if (BellButton.Content?.ToString() == "Listening") return;
+        BellButton.Content = "Listening";
         BellButton.IsEnabled = false;
 
-        _bellPlayer?.Dispose();
-        _bellPlayer = AudioPlayerHost.CreatePlayer();
-        _bellPlayer.Volume = 0.99f;
-        _bellPlayer.PlaybackEnded += (_, _) => Dispatcher.UIThread.Post(() =>
+        try
         {
-            BellButton.Content = "敲钟";
+            _bellPlayer?.Dispose();
+            _bellPlayer = AudioPlayerHost.CreatePlayer();
+            _bellPlayer.Volume = 0.99f;
+            _bellPlayer.PlaybackEnded += (_, _) => Dispatcher.UIThread.Post(() =>
+            {
+                BellButton.Content = "Bell";
+                BellButton.IsEnabled = true;
+            });
+            _bellPlayer.Play(AssetPath("fzn15.mp3"));
+        }
+        catch (Exception ex)
+        {
+            BellButton.Content = "Bell";
             BellButton.IsEnabled = true;
-        });
-        _bellPlayer.Play(AssetPath("fzn15.mp3"));
+            ShowAudioError(ex);
+        }
     }
 
     // ─── 通知音 ───
 
     private void PlayNotificationSound(string fileName)
     {
-        _notifyPlayer?.Dispose();
-        _notifyPlayer = AudioPlayerHost.CreatePlayer();
-        _notifyPlayer.Volume = 1.0f;
-        _notifyPlayer.Play(AssetPath(fileName));
+        try
+        {
+            _notifyPlayer?.Dispose();
+            _notifyPlayer = AudioPlayerHost.CreatePlayer();
+            _notifyPlayer.Volume = 1.0f;
+            _notifyPlayer.Play(AssetPath(fileName));
+        }
+        catch (Exception ex)
+        {
+            ShowAudioError(ex);
+        }
     }
 
     // ─── 秒表 ───
@@ -185,11 +200,16 @@ public partial class MainWindow : Window
     private async void OnCountdownStart(object? sender, RoutedEventArgs e)
     {
         int minutes = ParseMinutes();
+        if (minutes <= 0)
+        {
+            MinutesBox.Text = "";
+            MinutesBox.Focus();
+            return;
+        }
 
-        // 弹输入对话框拿"事由"
-        var dialog = new InputDialogWindow("请输入倒计时事由");
+        var dialog = new InputDialogWindow("Countdown reason");
         var reason = await dialog.ShowDialog<string?>(this);
-        if (reason is null) return;  // 用户取消
+        if (reason is null) return;
         _countdownReason = reason;
 
         // 先把已有倒计时停掉
@@ -215,7 +235,7 @@ public partial class MainWindow : Window
             _countdownTimer?.Stop();
             _countdownTimer = null;
             PlayNotificationSound("daojishi.mp3");
-            var win = new FullScreenMessageWindow($"{_countdownTotalSeconds / 60} 分钟到了！请 '{_countdownReason}'");
+            var win = new FullScreenMessageWindow($"{_countdownTotalSeconds / 60} minutes are up. Please: {_countdownReason}");
             win.Show();
         }
     }
@@ -244,7 +264,6 @@ public partial class MainWindow : Window
 
     private void OnScheduleClick(object? sender, RoutedEventArgs e)
     {
-        // 已经在跑 → 取消
         if (ScheduleButton.Content?.ToString() == "Cancel")
         {
             _scheduledTimer?.Stop();
@@ -281,7 +300,7 @@ public partial class MainWindow : Window
         MinuteInput.IsEnabled = true;
 
         PlayNotificationSound("daojishi.mp3");
-        var win = new FullScreenMessageWindow($"定时提醒：{DateTime.Now:HH:mm} 到了！");
+        var win = new FullScreenMessageWindow($"Reminder: {DateTime.Now:HH:mm} is here.");
         win.Show();
     }
 
@@ -316,7 +335,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"加载播放列表失败：{ex.Message}");
+            Console.Error.WriteLine($"Failed to load playlist: {ex.Message}");
         }
     }
 
@@ -330,7 +349,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"保存播放列表失败：{ex.Message}");
+            Console.Error.WriteLine($"Failed to save playlist: {ex.Message}");
         }
     }
 
@@ -345,11 +364,11 @@ public partial class MainWindow : Window
     {
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
-            Title = "选择音频文件",
+            Title = "Choose audio files",
             AllowMultiple = true,
             FileTypeFilter = new[]
             {
-                new FilePickerFileType("音频文件")
+                new FilePickerFileType("Audio files")
                 {
                     Patterns = new[] { "*.mp3", "*.wma", "*.wav" }
                 }
@@ -373,7 +392,7 @@ public partial class MainWindow : Window
         StopPlaylist();
         _audioList.Clear();
         AudioListBox.Text = "";
-        PlayAudioButton.Content = "播放";
+        PlayAudioButton.Content = "Play";
     }
 
     /// <summary>播放/暂停/恢复 三态按钮。</summary>
@@ -387,13 +406,13 @@ public partial class MainWindow : Window
             if (_playlistPlayer.State == AudioPlaybackState.Playing)
             {
                 _playlistPlayer.Pause();
-                PlayAudioButton.Content = "恢复";
+                PlayAudioButton.Content = "Resume";
                 return;
             }
             if (_playlistPlayer.State == AudioPlaybackState.Paused)
             {
                 _playlistPlayer.Resume();
-                PlayAudioButton.Content = "暂停";
+                PlayAudioButton.Content = "Pause";
                 return;
             }
         }
@@ -407,7 +426,7 @@ public partial class MainWindow : Window
     private void OnStopAudio(object? sender, RoutedEventArgs e)
     {
         StopPlaylist();
-        PlayAudioButton.Content = "播放";
+        PlayAudioButton.Content = "Play";
     }
 
     private void StopPlaylist()
@@ -423,19 +442,29 @@ public partial class MainWindow : Window
     {
         if (index < 0 || index >= _audioList.Count) return;
 
-        // 先停掉旧的
         _playlistPlayer?.Stop();
         _playlistPlayer?.Dispose();
+        _playlistPlayer = null;
 
-        _playlistPlayer = AudioPlayerHost.CreatePlayer();
-        _playlistPlayer.Volume = 0.5f;
-        _playlistPlayer.PlaybackEnded += OnPlaylistTrackEnded;
-        _playlistPlayer.Play(_audioList[index][0]);
-        PlayAudioButton.Content = "暂停";
+        try
+        {
+            _playlistPlayer = AudioPlayerHost.CreatePlayer();
+            _playlistPlayer.Volume = 0.5f;
+            _playlistPlayer.PlaybackEnded += OnPlaylistTrackEnded;
+            _playlistPlayer.Play(_audioList[index][0]);
+            PlayAudioButton.Content = "Pause";
+        }
+        catch (Exception ex)
+        {
+            _playlistPlayer?.Dispose();
+            _playlistPlayer = null;
+            PlayAudioButton.Content = "Play";
+            ShowAudioError(ex);
+            return;
+        }
 
-        // 更新顶部"当前音频"行
         AudioListBox.Text =
-            $"当前音频: {_audioList[index][1]}" + Environment.NewLine + Environment.NewLine
+            $"Now playing: {_audioList[index][1]}" + Environment.NewLine + Environment.NewLine
             + string.Join(Environment.NewLine, _audioList.ConvertAll(a => a[1]));
     }
 
@@ -453,7 +482,7 @@ public partial class MainWindow : Window
                 if (!loop)
                 {
                     StopPlaylist();
-                    PlayAudioButton.Content = "播放";
+                    PlayAudioButton.Content = "Play";
                     return;
                 }
                 next = 0;
@@ -469,4 +498,30 @@ public partial class MainWindow : Window
     /// <summary>构造 Asset 目录下文件的绝对路径。</summary>
     private static string AssetPath(string fileName)
         => Path.Combine(AppContext.BaseDirectory, "Asset", fileName);
+
+    public void Shutdown()
+    {
+        _clockTimer.Stop();
+        _stopwatchTimer.Stop();
+        _countdownTimer?.Stop();
+        _scheduledTimer?.Stop();
+
+        _playlistPlayer?.Dispose();
+        _playlistPlayer = null;
+        _notifyPlayer?.Dispose();
+        _notifyPlayer = null;
+        _bellPlayer?.Dispose();
+        _bellPlayer = null;
+    }
+
+    private void ShowAudioError(Exception ex)
+    {
+        Console.Error.WriteLine($"Audio is unavailable: {ex.Message}");
+        if (_audioErrorShown) return;
+        _audioErrorShown = true;
+
+        var win = new FullScreenMessageWindow(
+            "Audio is unavailable. Please install VLC in /Applications/VLC.app or check that the VLC architecture matches this Mac.");
+        win.Show();
+    }
 }

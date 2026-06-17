@@ -12,9 +12,9 @@
                       Clicked="OnTrayClicked">
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Header="显示" Click="OnShowClick" />
+                        <NativeMenuItem Header="Show" Click="OnShowClick" />
                         <NativeMenuItemSeparator />
-                        <NativeMenuItem Header="退出" Click="OnExitClick" />
+                        <NativeMenuItem Header="Quit" Click="OnExitClick" />
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>

@@ -11,7 +11,7 @@
     <DockPanel>
         <Button x:Name="CloseButton"
                 DockPanel.Dock="Bottom"
-                Content="关闭"
+                Content="Close"
                 Width="200" Height="60"
                 FontSize="18"
                 Background="#6C63FF"

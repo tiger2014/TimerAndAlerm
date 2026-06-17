@@ -32,7 +32,11 @@ public partial class App : Application
     private void OnMainWindowClosing(object? sender, WindowClosingEventArgs e)
     {
         if (sender is MainWindow mw) mw.SaveMusicList();
-        if (_forceExit) return;
+        if (_forceExit)
+        {
+            if (sender is MainWindow main) main.Shutdown();
+            return;
+        }
         e.Cancel = true;
         if (sender is Window w) w.Hide();
     }
@@ -46,7 +50,11 @@ public partial class App : Application
     /// <summary>托盘菜单"退出"。退出前保存播放列表。</summary>
     private void OnExitClick(object? sender, EventArgs e)
     {
-        if (_desktop?.MainWindow is MainWindow mw) mw.SaveMusicList();
+        if (_desktop?.MainWindow is MainWindow mw)
+        {
+            mw.SaveMusicList();
+            mw.Shutdown();
+        }
         _forceExit = true;
         _desktop?.Shutdown();
     }

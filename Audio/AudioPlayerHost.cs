@@ -141,6 +141,10 @@ public static class AudioPlayerHost
         }
     }
 
-    /// <summary>创建一个新的 player 实例。调用前确保已 EnsureInitialized。</summary>
-    public static IAudioPlayer CreatePlayer() => new LibVlcAudioPlayer();
+    /// <summary>创建一个新的 player 实例。</summary>
+    public static IAudioPlayer CreatePlayer()
+    {
+        EnsureInitialized();
+        return new LibVlcAudioPlayer();
+    }
 }
