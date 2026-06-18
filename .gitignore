@@ -370,3 +370,9 @@ FodyWeavers.xsd
 
 # Claude Code 会话级权限设置（机器/会话个人）
 .claude/
+
+# macOS 打包产物（package-mac.sh 生成）
+/dist/
+
+# macOS 桌面服务元数据
+.DS_Store
